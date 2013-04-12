@@ -1,0 +1,6 @@
+# md5 hashed
+# foo / bar
+# bob / test
+
+foo:37b51d194a7513e45b56f6524f2d51f2
+bob:098f6bcd4621d373cade4e832627b4f6

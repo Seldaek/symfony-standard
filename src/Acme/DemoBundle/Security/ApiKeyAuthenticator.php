@@ -2,7 +2,7 @@
 
 namespace Acme\DemoBundle\Security;
 
-use Symfony\Component\Security\Core\Authentication\SimpleTokenAuthenticatorInterface;
+use Symfony\Component\Security\Core\Authentication\SimpleHttpAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
@@ -13,8 +13,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
-class ApiKeyAuthenticator implements SimpleTokenAuthenticatorInterface, UserProviderInterface
+class ApiKeyAuthenticator implements SimpleHttpAuthenticatorInterface, UserProviderInterface, AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface
 {
     /* -- helper/own methods -- */
 
@@ -39,7 +41,7 @@ class ApiKeyAuthenticator implements SimpleTokenAuthenticatorInterface, UserProv
         throw new UsernameNotFoundException(sprintf('API Key "%s" does not exist.', $apikey));
     }
 
-    /* -- SimpleTokenAuthenticatorInterface methods -- */
+    /* -- SimpleHttpAuthenticatorInterface methods -- */
 
     public function createToken(Request $request, $providerKey)
     {
@@ -54,7 +56,6 @@ class ApiKeyAuthenticator implements SimpleTokenAuthenticatorInterface, UserProv
             throw new AuthenticationException('Invalid api key');
         }
 
-        // TODO is PreAuthToken really the best?
         return new PreAuthenticatedToken($user, $token->getCredentials(), $providerKey, $user->getRoles());
     }
 
@@ -65,7 +66,6 @@ class ApiKeyAuthenticator implements SimpleTokenAuthenticatorInterface, UserProv
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        return new Response('FAILED TO AUTH WITH APIKEY', 400);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)

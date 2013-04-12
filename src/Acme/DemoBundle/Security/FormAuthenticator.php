@@ -14,8 +14,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
-class FormAuthenticator implements SimpleFormAuthenticatorInterface, UserProviderInterface
+class FormAuthenticator implements SimpleFormAuthenticatorInterface, UserProviderInterface, AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface
 {
     private $encoderFactory;
 
@@ -53,8 +55,6 @@ class FormAuthenticator implements SimpleFormAuthenticatorInterface, UserProvide
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        // TODO this doesn't get called yet
-        return new Response('FAILED TO AUTH WITH USER/PWD', 400);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)

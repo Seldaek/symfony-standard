@@ -22,9 +22,9 @@ security:
 
         secured_area:
             pattern:    ^/demo/secured/
-            simple_token:
-                provider: simple_apikey
-                authenticator: acme.simple_apikey_authenticator
+#            simple_http:
+#                provider: simple_apikey
+#                authenticator: acme.simple_apikey_authenticator
             simple_form:
                 provider: simple_form
                 authenticator: acme.simple_form_authenticator
